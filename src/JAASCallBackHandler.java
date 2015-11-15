@@ -9,7 +9,7 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 
-public class JAASCallBackHandler implements CallbackHandler {
+public class JAASCallbackHandler implements CallbackHandler {
 
 	/* 
 	 * Checks what authentication handlers the user has configured and calls them.

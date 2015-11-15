@@ -58,6 +58,10 @@ public class JAASSystem implements LoginModule {
 		this.options = options;
 		
 	}
+
+	public Subject getSubject() {
+		return subject;
+	}
 	
 	
 	
@@ -105,6 +109,11 @@ public class JAASSystem implements LoginModule {
 	 * @see javax.security.auth.spi.LoginModule#login()
 	 */
 	public boolean login() throws LoginException {
+
+		System.out.print("\n\n--------------------------\n" + 
+						 "Login\n" +
+						 "--------------------------\n\n");
+
 		// We will use two call backs - one for username and the other
 		// for password. 
 		Callback exampleCallbacks[] = new Callback[2];
@@ -127,10 +136,9 @@ public class JAASSystem implements LoginModule {
 		
 		// Now perform validation. This part, you can either read from a file or a 
 		// database. You can also incorporate secure password  handling here. 
-		// As an example, we are going to use hard-coded passwords. 
-		System.out.println("Checking username and password: " + username +"/" + password);
+
 		if ((username.equals("team") && password.equals("security")) ||
-				(username.equals("root") && password.equals("security"))){
+				(username.equals("root") && password.equals("root"))) {
 				successfulLogin = true; 
 				return true; // successful login.
 			
@@ -139,7 +147,6 @@ public class JAASSystem implements LoginModule {
 		return false;
 	}
 		
-
 
 	/*
 	 * 

@@ -3,13 +3,16 @@ grant codebase "file:./-" {
 	permission javax.security.auth.AuthPermission "createLoginContext.JAASMaster";
 	permission javax.security.auth.AuthPermission "modifyPrincipals";
 	permission javax.security.auth.AuthPermission "getSubject";
+	permission java.lang.RuntimePermission "readFileDescriptor";
+	permission java.lang.RuntimePermission "writeFileDescriptor";
 	
 };
 
 		
 grant {
 	permission java.io.FilePermission "files/*", "read";
-	permission java.io.FilePermission "files/test1", "write";
+	permission java.io.FilePermission "files/employeeList.txt", "write";
+	permission java.io.FilePermission "files/loginList.txt", "write";
 }; 
 
 
