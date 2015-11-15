@@ -1,0 +1,6 @@
+Kent, 1001, CEO, , $350000
+Ray, 1025, VP, Kent (1001), $250000
+John, 1014, Manager, Ray (1025), $120000
+Alex, 1020, Associate, John (1014), $80000
+Mo, 1028, Associate, John (1014), $70000
+Brian, 1030, Junior Associate, Alex (1020), $40000
