@@ -25,4 +25,8 @@ public class LoggedUser {
 	public void changePassword(String _password) {
 		password = _password;
 	}
+
+	public String toString() {
+		return id + ", " + username + ", " + password;
+	}
 }

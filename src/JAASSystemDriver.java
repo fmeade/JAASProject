@@ -3,8 +3,7 @@ package src;
 import java.io.*;
 import java.util.*;
 
-import java.security.PrivilegedAction;
-import java.security.Principal;
+import java.security.*;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.*;
@@ -35,7 +34,7 @@ public class JAASSystemDriver {
     static List<Employee> employeeList;
     static List<LoggedUser> loginList;
 	
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 
 		/* Create a call back handler. This call back handler will be populated with
                  * different callbacks by the various login modules. For example, 
@@ -68,7 +67,7 @@ public class JAASSystemDriver {
 		menu();
 	}
 
-	public static void menu() {
+	public static void menu() throws IOException, NoSuchAlgorithmException {
 
 		try {
 
@@ -89,7 +88,7 @@ public class JAASSystemDriver {
 			if(choice == 1) {
 
 				String name;
-				int id;
+				int id = 0;
 				String username;
 				String password;
 				Boolean user_exists = true;
@@ -103,15 +102,20 @@ public class JAASSystemDriver {
 						name = scan.next();
 						scan.nextLine();
 
-					System.out.print("ID: ");
-						id = scan.nextInt();
-						scan.nextLine();
+					try {
+						System.out.print("ID: ");
+							id = scan.nextInt();
+							scan.nextLine();
 
-					user_exists = processFile.checkLoginList(loginList, id);
+						user_exists = processFile.checkLoginList(loginList, id);
 
-					if(user_exists) {
-						System.out.println("\nEmployee account already exists.\n");
-						// overwrite?
+						if(user_exists) {
+							System.out.println("\nEmployee account already exists.\n");
+							// overwrite?
+						}
+					} catch (InputMismatchException e) {
+						System.err.println("ERROR: " + e);
+							scan.nextLine();
 					}
 				}
 
@@ -136,6 +140,26 @@ public class JAASSystemDriver {
 
 						if((new String(console.readPassword())).equals(password)) {
 							user_accepted = true;
+
+							MD5Hash hasher = new MD5Hash();
+
+							loginList.add(new LoggedUser(id,username,hasher.hash(password))); // still needs hash
+
+							FileWriter login = new FileWriter("files/loginList.txt",true);
+							BufferedWriter bw = new BufferedWriter(login);
+							
+							
+							if(loginList.size() == 1){
+								bw.write((loginList.get(loginList.size()-1)).toString());
+							}
+							else {
+								bw.write("\n" + (loginList.get(loginList.size()-1)).toString());
+							}
+							bw.flush();
+							
+							if(bw != null) {
+								bw.close();
+							}
 						}
 						else {
 							System.out.println("\nPassword did not match.\n");
@@ -143,8 +167,6 @@ public class JAASSystemDriver {
 					}
 				}
 
-				// add to login file
-				// re-load login file
 
 				menu();
 			}
