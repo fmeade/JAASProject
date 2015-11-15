@@ -93,6 +93,7 @@ public class JAASSystemDriver {
 				String username;
 				String password;
 				Boolean user_exists = true;
+				Boolean username_exists = true;
 				Boolean user_accepted = false;
 
 
@@ -120,8 +121,9 @@ public class JAASSystemDriver {
 						username = scan.next();
 						scan.nextLine();
 
-					//checks file for username
-					if(username.equals("user")) {
+					username_exists = processFile.checkLoginList(loginList, username);
+
+					if(username_exists) {
 						System.out.println("\nUsername already exists.\n");
 					}
 					else {
