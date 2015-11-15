@@ -106,7 +106,7 @@ public class JAASSystemDriver {
 						id = scan.nextInt();
 						scan.nextLine();
 
-					// check for user
+					user_exists = processFile.checkLoginList(loginList, id);
 
 					if(user_exists) {
 						System.out.println("\nEmployee account already exists.\n");
