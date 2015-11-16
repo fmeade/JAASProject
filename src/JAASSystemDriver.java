@@ -399,6 +399,8 @@ public class JAASSystemDriver {
 		else if(choice == 3) {
 			Employee employee = selectedEmployee(_loggedUser);
 
+			System.out.println("\nCurrent Salary: $" + employee.getSalary());
+
 			System.out.print("\nNew Salary: $");
 
 			try {
@@ -452,6 +454,54 @@ public class JAASSystemDriver {
 		else if(choice == 4) {
 			Employee employee = selectedEmployee(_loggedUser);
 
+			System.out.println("\nCurrent Position: " + employee.getPosition());
+
+			System.out.print("\nNew Position: ");
+
+			try {
+				String newPosition = scan.nextLine();
+
+				employee.setPosition(newPosition);
+
+				List<Employee> tempList = new ArrayList<Employee>();
+
+				for(int i=0; i < employeeList.size(); i++) {
+					if(employee.getId() == employeeList.get(i).getId()) {
+						tempList.add(employee);
+					}
+					else {
+						tempList.add(employeeList.get(i));
+					}
+				}
+
+				employeeList = tempList;
+
+
+				FileWriter login = new FileWriter("files/employeeList.txt",false);
+				BufferedWriter bw = new BufferedWriter(login);
+				
+				
+				for(int i=0; i < employeeList.size(); i++) {
+					if(i == 0) {
+						bw.write((employeeList.get(i)).stringWrite());
+					}
+					else {
+						bw.write("\n" + (employeeList.get(i).stringWrite()));
+					}
+				}
+
+				bw.flush();
+				
+				if(bw != null) {
+					bw.close();
+				}
+
+				System.out.println("\nPosition Change Successful!\n");
+				queryMenu(_loggedUser);
+			}
+			catch(java.util.InputMismatchException e) {
+				choice = 0;
+			}
 
 			queryMenu(_loggedUser);
 		}
