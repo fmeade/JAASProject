@@ -43,4 +43,12 @@ public class Employee {
 	public void setSalary(long _salary) {
 		salary = _salary; 
 	}
+
+	public String toString() {
+		return "First Name: " + name + "\n" + 
+				"ID: " + id + "\n" +
+				"Position: " + position + "\n" +
+				"Supervisor: " + supervisor + "\n" +
+				"Salary: " + salary + "\n";
+	}
 }

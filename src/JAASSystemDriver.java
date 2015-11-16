@@ -67,7 +67,7 @@ public class JAASSystemDriver {
 		menu();
 	}
 
-	public static void menu() throws IOException, NoSuchAlgorithmException {
+	static void menu() throws IOException, NoSuchAlgorithmException {
 
 		try {
 
@@ -217,14 +217,14 @@ public class JAASSystemDriver {
 	}
 
 
-	public static void userMenu(String _loggedUser) throws IOException, NoSuchAlgorithmException  {
+	static void userMenu(String _loggedUser) throws IOException, NoSuchAlgorithmException  {
 		System.out.print("\n-----------------------------\n" +
 						 "User Menu\n" +
 						 "-----------------------------\n" +
 						 "1. Query Personal Information\n" +
 						 "2. Change Password\n" +
 						 "3. Logout\n\n");
-		Scanner scan = new Scanner(System.in);
+			Scanner scan = new Scanner(System.in);
 
 
 		
@@ -239,7 +239,7 @@ public class JAASSystemDriver {
 			}
 
 			if(choice == 1) {
-
+				queryMenu(_loggedUser);
 			}
 			else if(choice == 2) {
 				Console console = System.console();
@@ -343,6 +343,115 @@ public class JAASSystemDriver {
 				userMenu(_loggedUser);
 			}
 		
+	}
+
+
+	static void queryMenu(String _loggedUser) throws IOException, NoSuchAlgorithmException {
+		System.out.print("\n\n--------------------------\n" + 
+						 "Query Menu\n" +
+						 "--------------------------\n\n");
+		
+		System.out.print("1. Show Personal Information.\n" +
+						 "2. See Your Employee's Information.\n" +
+						 "3. Change Salary of Employee.\n" +
+						 "4. Change Position of Employee.\n" +
+						 "5. Back\n\n");
+
+		Scanner scan = new Scanner(System.in);
+
+
+		
+		int choice = 0;
+
+		try {
+			choice = scan.nextInt();
+			scan.nextLine();
+		}
+		catch(java.util.InputMismatchException e) {
+			choice = 0;
+		}
+
+
+
+		if(choice == 1) {
+
+		}
+		else if(choice == 2) {
+			Employee employee = selectedEmployee(_loggedUser);
+			
+			System.out.println("\n" + employee.toString());
+			queryMenu(_loggedUser);
+
+		}
+		else if(choice == 3) {
+			Employee employee = selectedEmployee(_loggedUser);
+		}
+		else if(choice == 4) {
+			Employee employee = selectedEmployee(_loggedUser);
+		}
+		else if(choice == 5) {
+			userMenu(_loggedUser);
+		}
+		else {
+			System.out.println("ERROR: Invalid Input.");
+				queryMenu(_loggedUser);
+		}
+	}
+
+	static Employee selectedEmployee(String _loggedUser) throws IOException, NoSuchAlgorithmException {
+		Scanner scan = new Scanner(System.in);
+		Employee employee = null;
+		List<Employee> userEmployeeList = new ArrayList<Employee>();
+		int userId = -1;
+		String userName = null;
+
+		for(int i=0; i < loginList.size(); i++) {
+			if(_loggedUser.equals(loginList.get(i).getUsername())) {
+				userId = loginList.get(i).getId();
+				i = loginList.size();
+			}
+		}
+
+		for(int i=0; i < employeeList.size(); i++) {
+			if(userId == employeeList.get(i).getId()) {
+				userName = employeeList.get(i).getName();
+				i = employeeList.size();
+			}
+		}
+
+		for(int i=0; i < employeeList.size(); i++) {
+			if((userName + " (" + userId + ")").equals(employeeList.get(i).getSupervisor())) {
+				userEmployeeList.add(employeeList.get(i));
+			}
+		}
+
+
+		for(int i=0; i < userEmployeeList.size(); i++) {
+			System.out.println(userEmployeeList.get(i).getId() + " " + userEmployeeList.get(i).getName() );
+		}
+
+
+
+		System.out.print("\nSelect employee: ");
+
+		try {
+			int employeeId = scan.nextInt();
+			scan.nextLine();
+
+			for(int i=0; i < userEmployeeList.size(); i++) {
+			if(employeeId == userEmployeeList.get(i).getId()) {
+				employee = userEmployeeList.get(i);
+			}
+		}
+		}
+		catch(java.util.InputMismatchException e) {
+			System.out.println("\nInvalid Employee ID.\n");
+			queryMenu(_loggedUser);
+		}
+
+
+
+		return employee;
 	}
 	
 }
