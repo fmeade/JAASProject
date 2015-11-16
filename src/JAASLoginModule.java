@@ -110,7 +110,7 @@ public class JAASLoginModule implements LoginModule {
 	 */
 	public boolean login() throws LoginException {
 
-		System.out.print("\n\n--------------------------\n" + 
+		System.out.print("\n--------------------------\n" + 
 						 "Login\n" +
 						 "--------------------------\n\n");
 

@@ -66,6 +66,7 @@ public class JAASSystemDriver {
 	static void menu() throws IOException, NoSuchAlgorithmException {
 
 		try {
+			System.out.print("\033[H\033[2J");
 
     		Scanner scan = new Scanner(System.in);
     		Console console = System.console();
@@ -83,13 +84,18 @@ public class JAASSystemDriver {
 			try {
 				choice = scan.nextInt();
 				scan.nextLine();
+
+				System.out.print("\033[H\033[2J");
 			}
 			catch(java.util.InputMismatchException e) {
 				choice = 0;
 			}
 
 			if(choice == 1) {
-				console.flush();
+
+				System.out.println("\n--------------------------\n" + 
+						 			"Create an account\n" +
+						 			"--------------------------\n");
 
 				String name;
 				int id = 0;
@@ -201,14 +207,14 @@ public class JAASSystemDriver {
 
 			} // end Create a Login account
 			else if(choice == 2) { //Login to an existing account
-				console.flush();
-
+				
 				lc.login();
+				System.out.print("\033[H\033[2J"); // clears screen
 
 				// If we reach this point then login has succeeded.
-				System.out.println("\nLogin Successful!\n");
+				System.out.println("\nLogin Successful!");
 
-
+				String user = null;
 				/* 
 			 	* Print the various Principals attached with the logged Subject.
 			 	* In this example, we attach only one principal with each subject.
@@ -217,11 +223,11 @@ public class JAASSystemDriver {
 				Set principals = lc.getSubject().getPrincipals();
 				Iterator i = principals.iterator();
 				while (i.hasNext()) {
-					loggedUser = ((Principal)i.next()).getName();
+					user = ((Principal)i.next()).getName();
 				}
 
 				/* Accesses the user's menu */
-				userMenu(loggedUser);
+				userMenu(user);
 
 			} // end login
 			else if(choice == 3) { // exit system
@@ -262,6 +268,7 @@ public class JAASSystemDriver {
 			try {
 				choice = scan.nextInt();
 				scan.nextLine();
+				System.out.print("\033[H\033[2J"); // clears screen
 			}
 			catch(java.util.InputMismatchException e) {
 				choice = 0;
@@ -350,6 +357,7 @@ public class JAASSystemDriver {
 							bw.close();
 						}
 
+						System.out.print("\033[H\033[2J"); // clears screen
 						System.out.println("\nPassword Change Successful!\n");
 						userMenu(_loggedUser);
 					}
@@ -375,9 +383,9 @@ public class JAASSystemDriver {
 
 
 	static void queryMenu(String _loggedUser) throws IOException, NoSuchAlgorithmException {
-		System.out.print("\n\n--------------------------\n" + 
+		System.out.print("\n--------------------------\n" + 
 						 "Query Menu\n" +
-						 "--------------------------\n\n");
+						 "--------------------------\n");
 		
 		System.out.print("1. Show Personal Information.\n" +
 						 "2. See Your Employee's Information.\n" +
@@ -394,6 +402,7 @@ public class JAASSystemDriver {
 		try {
 			choice = scan.nextInt();
 			scan.nextLine();
+			System.out.print("\033[H\033[2J"); // clears screen
 		}
 		catch(java.util.InputMismatchException e) {
 			choice = 0;
@@ -409,6 +418,7 @@ public class JAASSystemDriver {
 		}
 		else if(choice == 2) {
 			Employee employee = selectedEmployee(_loggedUser);
+			System.out.print("\033[H\033[2J"); // clears screen
 			
 			System.out.println("\n" + employee.toString());
 			queryMenu(_loggedUser);
@@ -424,6 +434,7 @@ public class JAASSystemDriver {
 			try {
 				int newSalary = scan.nextInt();
 				scan.nextLine();
+				System.out.print("\033[H\033[2J"); // clears screen
 
 				employee.setSalary(newSalary);
 
@@ -477,6 +488,7 @@ public class JAASSystemDriver {
 
 			try {
 				String newPosition = scan.nextLine();
+				System.out.print("\033[H\033[2J"); // clears screen
 
 				employee.setPosition(newPosition);
 
