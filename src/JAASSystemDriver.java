@@ -99,6 +99,7 @@ public class JAASSystemDriver {
 				String username;
 				String password;
 				Boolean user_exists = true;
+				Boolean employee_exists = false;
 				Boolean username_exists = true;
 				Boolean user_accepted = false;
 
@@ -119,6 +120,14 @@ public class JAASSystemDriver {
 						if(user_exists) {
 							System.out.println("\nEmployee account already exists.\n");
 							// overwrite?
+							menu();
+						}
+
+						employee_exists = processFile.checkEmployeeList(employeeList, id);
+
+						if(!employee_exists) {
+							System.out.println("\nEmployee record does not exist.\n");
+							menu();
 						}
 					} catch (InputMismatchException e) {
 						System.err.println("ERROR: " + e);
@@ -263,7 +272,7 @@ public class JAASSystemDriver {
 				boolean correct_user = processFile.checkLoginList(loginList, username, hasher.hash(oldPassword));
 
 				if(!username.equals(_loggedUser) || !correct_user) {
-					System.out.println("Invalid username/password");
+					System.out.println("\nInvalid username/password.\n");
 					userMenu(_loggedUser);
 				}
 				else {
@@ -374,7 +383,10 @@ public class JAASSystemDriver {
 
 
 		if(choice == 1) {
-
+			Employee employee = loggedEmployee(_loggedUser);
+			
+			System.out.println("\n" + employee.toString());
+			queryMenu(_loggedUser);
 		}
 		else if(choice == 2) {
 			Employee employee = selectedEmployee(_loggedUser);
@@ -385,9 +397,15 @@ public class JAASSystemDriver {
 		}
 		else if(choice == 3) {
 			Employee employee = selectedEmployee(_loggedUser);
+
+
+			queryMenu(_loggedUser);
 		}
 		else if(choice == 4) {
 			Employee employee = selectedEmployee(_loggedUser);
+
+
+			queryMenu(_loggedUser);
 		}
 		else if(choice == 5) {
 			userMenu(_loggedUser);
@@ -396,6 +414,27 @@ public class JAASSystemDriver {
 			System.out.println("ERROR: Invalid Input.");
 				queryMenu(_loggedUser);
 		}
+	}
+
+	static Employee loggedEmployee(String _loggedUser) throws IOException, NoSuchAlgorithmException {
+		Employee employee = null;
+		int userId = -1;
+
+		for(int i=0; i < loginList.size(); i++) {
+			if(_loggedUser.equals(loginList.get(i).getUsername())) {
+				userId = loginList.get(i).getId();
+				i = loginList.size();
+			}
+		}
+
+		for(int i=0; i < employeeList.size(); i++) {
+			if(userId == employeeList.get(i).getId()) {
+				employee = employeeList.get(i);
+				i = employeeList.size();
+			}
+		}
+		return employee;
+
 	}
 
 	static Employee selectedEmployee(String _loggedUser) throws IOException, NoSuchAlgorithmException {
