@@ -1,6 +1,16 @@
-Kent, 1001, CEO, , $350000
-Ray, 1025, VP, Kent (1001), $300000
-John, 1014, Manager, Ray (1025), $120000
-Alex, 1020, Associate, John (1014), $80000
-Mo, 1028, Associate, John (1014), $70000
-Brian, 1030, Junior Associate, John (1014), $40000
+Pittges, 5175, Chair, Carter (5238), $200000
+Chase, 5997, Java Professor, Pittges (5175), $180000
+Htay, 5993, Professor, Pittges (5175), $175000
+Lee, 6054, Professor, Pittges (5175), $175000
+Carter, 5238, Dean, , $300000
+Lewis-Williams, 5358, Associate Professor, Pittges (5175), $150000
+Okie, 5992, Professor, Pittges (5175), $175000
+Phillips, 5379, Professor, Pittges (5175), $175000
+Parsons, 5559, Instructor, Pittges (5175), $100000
+Ray, 5759, Associate Professor, Pittges (5175), $150000
+Shing, 5996, Associate Professor, Pittges (5175), $150000
+Prem, 6583, Associate Professor, Pittges (5175), $150000
+Wang, 5607, Associate Professor, Pittges (5175), $150000
+Rick, 5991, System Administrator, Pittges (5175), $120000
+Braffit, 5072, Instructor, Pittges (5175), $100000
+Barland, 5977, Associate Professor, Pittges (5175), $150000
