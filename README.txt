@@ -21,4 +21,3 @@ To run the program on Eclipse:
  		-Djava.security.manager -Djava.security.policy==JAASPolicies.txt -Djava.security.auth.login.config==JAASPolicy.txt  
 	(6) Run. 
 
-Usernames and passwords that will work: root/security or team/security. 

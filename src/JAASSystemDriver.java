@@ -340,7 +340,6 @@ public class JAASSystemDriver {
 			else if(choice == 3) {
 				try {
 					lc.logout();
-					_loggedUser = null;
 					menu();
 				}
 				catch (LoginException e) {
@@ -352,7 +351,6 @@ public class JAASSystemDriver {
 				System.err.println("ERROR: Invalid Input.");
 				userMenu(_loggedUser);
 			}
-		
 	}
 
 
@@ -447,9 +445,8 @@ public class JAASSystemDriver {
 			}
 			catch(java.util.InputMismatchException e) {
 				choice = 0;
+				queryMenu(_loggedUser);
 			}
-
-			queryMenu(_loggedUser);
 		}
 		else if(choice == 4) {
 			Employee employee = selectedEmployee(_loggedUser);
@@ -501,9 +498,8 @@ public class JAASSystemDriver {
 			}
 			catch(java.util.InputMismatchException e) {
 				choice = 0;
+				queryMenu(_loggedUser);
 			}
-
-			queryMenu(_loggedUser);
 		}
 		else if(choice == 5) {
 			userMenu(_loggedUser);
