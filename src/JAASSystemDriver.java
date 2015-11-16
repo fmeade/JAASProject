@@ -406,7 +406,8 @@ public class JAASSystemDriver {
 		}
 
 		for(int i=0; i < employeeList.size(); i++) {
-			if(currentEmployee.getPosition().equals("CEO") && currentEmployee.getId() != employeeList.get(i).getId()) {
+			if((currentEmployee.getPosition().equals("CEO") || currentEmployee.getPosition().equals("President")) 
+				&& currentEmployee.getId() != employeeList.get(i).getId()) {
 				userEmployeeList.add(employeeList.get(i));
 			}
 			else if((userName + " (" + userId + ")").equals(employeeList.get(i).getSupervisor())) {
@@ -488,7 +489,7 @@ public class JAASSystemDriver {
 					menu();
 				}
 
-				employee_exists = processFile.checkEmployeeList(employeeList, id);
+				employee_exists = processFile.checkEmployeeList(employeeList, name, id);
 
 				if(!employee_exists) {
 					System.out.println("\nEmployee record does not exist.\n");

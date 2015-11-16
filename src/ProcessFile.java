@@ -32,12 +32,12 @@ public class ProcessFile {
 	}
 
 
-	public Boolean checkEmployeeList(List<Employee> _list, int _id) {
+	public Boolean checkEmployeeList(List<Employee> _list, String _name, int _id) {
 
 		boolean exist = false;
 		
 		for(int i=0; i < _list.size(); i++) {
-			if((_list.get(i)).getId() == _id) {
+			if(_name.equals(_list.get(i).getName()) && (_list.get(i)).getId() == _id) {
 				exist = true;
 				i = _list.size();
 			}
