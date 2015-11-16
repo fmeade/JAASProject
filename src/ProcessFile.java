@@ -117,4 +117,21 @@ public class ProcessFile {
 		}
 		return exist;
 	}
+
+	public Boolean checkLoginList(List<LoggedUser> _list, String _username, String _password) {
+
+		boolean exist = false;
+
+		for(int i=0; i < _list.size(); i++) {
+
+			if((_list.get(i).getUsername()).equals(_username) && (_list.get(i).getPassword()).equals(_password)) {
+				exist = true;
+				i = _list.size();
+			}
+			else {
+				exist = false;
+			}
+		}
+		return exist;
+	}
 }

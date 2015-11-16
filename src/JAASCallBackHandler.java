@@ -1,5 +1,5 @@
 package src;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 import javax.security.auth.callback.Callback;
@@ -15,8 +15,8 @@ public class JAASCallbackHandler implements CallbackHandler {
 	 * Checks what authentication handlers the user has configured and calls them.
 	 * @see javax.security.auth.callback.CallbackHandler#handle(javax.security.auth.callback.Callback[])
 	 */
-	public void handle(Callback[] arg0) throws IOException,
-			UnsupportedCallbackException {
+	public void handle(Callback[] arg0) throws IOException, UnsupportedCallbackException {
+		
 		int numCallBacks = 0; 
 		for (int i=0; i < arg0.length; i++) {
 			/* 
@@ -38,7 +38,8 @@ public class JAASCallbackHandler implements CallbackHandler {
 				// setPassword requires a character array as parameter.
 				// so we read in the password as a string and convert to 
 				// charArray. 
-				userpass.setPassword((new Scanner(System.in).next()).toCharArray());
+				Console console = System.console();
+				userpass.setPassword(console.readPassword());
 				// another callback done.
 				numCallBacks++;
 			}

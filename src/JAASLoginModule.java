@@ -1,7 +1,7 @@
 package src;
 import java.io.IOException;
-import java.security.Principal;
-import java.util.Map;
+import java.security.*;
+import java.util.*;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
@@ -13,7 +13,7 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
 
-public class JAASSystem implements LoginModule {
+public class JAASLoginModule implements LoginModule {
 
 	// Flag to keep track of successful login.
 	Boolean successfulLogin = false;
@@ -137,13 +137,28 @@ public class JAASSystem implements LoginModule {
 		// Now perform validation. This part, you can either read from a file or a 
 		// database. You can also incorporate secure password  handling here. 
 
-		if ((username.equals("team") && password.equals("security")) ||
-				(username.equals("root") && password.equals("root"))) {
-				successfulLogin = true; 
-				return true; // successful login.
-			
+		try {
+
+
+			ProcessFile processFile = new ProcessFile();
+			MD5Hash hasher = new MD5Hash();
+
+			List<LoggedUser> loginList = processFile.buildLoginList();
+
+			boolean login_successful = processFile.checkLoginList(loginList, username, hasher.hash(password));
+
+			if(login_successful) {
+				successfulLogin = true;
+				return true; // successful login
+			}
 		}
-		
+		catch(IOException e) {
+			System.err.println("ERROR: " + e);
+		} 
+		catch(NoSuchAlgorithmException e) {
+			System.err.println("ERROR: " + e);
+		}
+
 		return false;
 	}
 		

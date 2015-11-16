@@ -80,10 +80,17 @@ public class JAASSystemDriver {
 							 "Welcome to the Radsburg, Inc.\nEmployee Directory\n" +
 						     "=============================\n\n" +
 						     "1. Create a Login\n" + 
-					    	 "2. Login\n\n");
+					    	 "2. Login\n" + 
+					    	 "3. Exit\n\n");
 
-			choice = scan.nextInt();
-			scan.nextLine();
+			
+			try {
+				choice = scan.nextInt();
+				scan.nextLine();
+			}
+			catch(java.util.InputMismatchException e) {
+				choice = 0;
+			}
 
 			if(choice == 1) {
 
@@ -143,7 +150,7 @@ public class JAASSystemDriver {
 
 							MD5Hash hasher = new MD5Hash();
 
-							loginList.add(new LoggedUser(id,username,hasher.hash(password))); // still needs hash
+							loginList.add(new LoggedUser(id,username,hasher.hash(password)));
 
 							FileWriter login = new FileWriter("files/loginList.txt",true);
 							BufferedWriter bw = new BufferedWriter(login);
@@ -174,7 +181,7 @@ public class JAASSystemDriver {
 				lc.login();
 
 				// If we reach this point then login has succeeded.
-				System.out.println("You are now logged in!");
+				System.out.println("\nLogin Successful!\n");
 
 
 				/* 
@@ -187,18 +194,81 @@ public class JAASSystemDriver {
 				while (i.hasNext()) {
 					String s = ((Principal)i.next()).getName();
 				}
+
+				userMenu();
+
 			} 
+			else if(choice == 3) {
+				System.out.println("\nHave a Nice Day!\n");
+			}
 			else {
 				System.err.println("ERROR: Invalid Input.");
 				menu();
 			}
 		}
 		catch (LoginException e) {
-			System.out.println("Username/password incorrect! " + e);
+			System.out.println("\nUsername/password incorrect! \n");
+			menu();
 		}
 		catch (SecurityException e) {
 			System.out.println(" " + e);
 		}
 	}
+
+
+	public static void userMenu() throws IOException, NoSuchAlgorithmException  {
+		System.out.print("\n-----------------------------\n" +
+						 "User Menu\n" +
+						 "-----------------------------\n" +
+						 "1. Query Personal Information\n" +
+						 "2. Change Password\n" +
+						 "3. Logout\n\n");
+		Scanner scan = new Scanner(System.in);
+
+
+		
+			int choice = 0;
+
+			try {
+				choice = scan.nextInt();
+				scan.nextLine();
+			}
+			catch(java.util.InputMismatchException e) {
+				choice = 0;
+			}
+
+			if(choice == 1) {
+
+			}
+			else if(choice == 2) {
+				//change password
+
+				// re-write file
+
+				loginList = processFile.buildLoginList();
+			}
+			else if(choice == 3) {
+				try {
+					lc.logout();
+					menu();
+				}
+				catch (LoginException e) {
+					System.out.println("\nLogout Failed \n");
+					userMenu();
+				}
+			}
+			else {
+				System.err.println("ERROR: Invalid Input.");
+				userMenu();
+			}
+		
+	}
 	
 }
+
+
+
+
+
+
+
