@@ -89,6 +89,7 @@ public class JAASSystemDriver {
 			}
 
 			if(choice == 1) {
+				console.flush();
 
 				String name;
 				int id = 0;
@@ -200,6 +201,7 @@ public class JAASSystemDriver {
 
 			} // end Create a Login account
 			else if(choice == 2) { //Login to an existing account
+				console.flush();
 
 				lc.login();
 
@@ -215,11 +217,11 @@ public class JAASSystemDriver {
 				Set principals = lc.getSubject().getPrincipals();
 				Iterator i = principals.iterator();
 				while (i.hasNext()) {
-					s = ((Principal)i.next()).getName();
+					loggedUser = ((Principal)i.next()).getName();
 				}
 
 				/* Accesses the user's menu */
-				userMenu(s);
+				userMenu(loggedUser);
 
 			} // end login
 			else if(choice == 3) { // exit system
