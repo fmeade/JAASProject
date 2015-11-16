@@ -1,5 +1,5 @@
 Pittges, 5175, Chair, Carter (5238), $200000
-Chase, 5997, Java Professor, Pittges (5175), $175000
+Chase, 5997, Java Professor, Pittges (5175), $180000
 Htay, 5993, Professor, Pittges (5175), $175000
 Lee, 6054, Professor, Pittges (5175), $175000
 Carter, 5238, Dean, , $300000
@@ -13,4 +13,4 @@ Prem, 6583, Associate Professor, Pittges (5175), $150000
 Wang, 5607, Associate Professor, Pittges (5175), $150000
 Rick, 5991, Sys Admin, Pittges (5175), $120000
 Braffit, 5072, Instructor, Pittges (5175), $100000
-Barland, 5977, Associate Professor, Pittges (5175), $150000
+Barland, 5977, Professor, Pittges (5175), $150000

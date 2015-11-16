@@ -13,6 +13,8 @@ grant {
 	permission java.io.FilePermission "files/*", "read";
 	permission java.io.FilePermission "files/employeeList.txt", "write";
 	permission java.io.FilePermission "files/loginList.txt", "write";
+	permission java.io.FilePermission "files/successfulLogger.txt", "write";
+	permission java.io.FilePermission "files/deniedLogger.txt", "write";
 }; 
 
 

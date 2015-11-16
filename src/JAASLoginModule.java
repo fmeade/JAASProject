@@ -2,6 +2,7 @@ package src;
 import java.io.IOException;
 import java.security.*;
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
@@ -149,6 +150,9 @@ public class JAASLoginModule implements LoginModule {
 
 			if(login_successful) {
 				successfulLogin = true;
+
+				processFile.writeSuccessfulLogger(username);
+
 				return true; // successful login
 			}
 		}

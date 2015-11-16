@@ -2,6 +2,7 @@ package src;
 
 import java.util.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
 
 public class ProcessFile {
 
@@ -118,20 +119,70 @@ public class ProcessFile {
 		return exist;
 	}
 
-	public Boolean checkLoginList(List<LoggedUser> _list, String _username, String _password) {
+	public Boolean checkLoginList(List<LoggedUser> _list, String _username, String _password) throws IOException {
 
 		boolean exist = false;
 
 		for(int i=0; i < _list.size(); i++) {
 
 			if((_list.get(i).getUsername()).equals(_username) && (_list.get(i).getPassword()).equals(_password)) {
+
 				exist = true;
 				i = _list.size();
+
+			}
+			else if((_list.get(i).getUsername()).equals(_username) && !(_list.get(i).getPassword()).equals(_password)) {
+
+				writeDeniedLogger(_username);
+				
+				exist = false;
+
 			}
 			else {
 				exist = false;
 			}
 		}
 		return exist;
+	}
+
+	public void writeEmployeeFile(List<Employee> _employeeList) throws IOException {
+		FileWriter login = new FileWriter("files/employeeList.txt",false);
+		BufferedWriter bw = new BufferedWriter(login);
+		
+		
+		for(int i=0; i < _employeeList.size(); i++) {
+			if(i == 0) {
+				bw.write((_employeeList.get(i)).stringWrite());
+			}
+			else {
+				bw.write("\n" + (_employeeList.get(i).stringWrite()));
+			}
+		}
+
+		bw.flush();
+		
+		if(bw != null) {
+			bw.close();
+		}
+	}
+
+
+	public void writeSuccessfulLogger(String _username) throws IOException {
+		SimpleDateFormat utcDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+		utcDateFormat.setTimeZone(TimeZone.getTimeZone("GMT-4"));
+		FileWriter login = new FileWriter("files/successfulLogger.txt",true);
+		BufferedWriter bw = new BufferedWriter(login);
+		bw.write(_username + " -- " + utcDateFormat.format(new Date()) + "\n");
+		bw.close();
+	}
+
+
+	public void writeDeniedLogger(String _username) throws IOException {
+		SimpleDateFormat utcDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+		utcDateFormat.setTimeZone(TimeZone.getTimeZone("GMT-4"));
+		FileWriter login = new FileWriter("files/deniedLogger.txt",true);
+		BufferedWriter bw = new BufferedWriter(login);
+		bw.write(_username + " -- " + utcDateFormat.format(new Date()) + "\n");
+		bw.close();
 	}
 }

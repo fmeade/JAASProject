@@ -58,6 +58,8 @@ public class JAASSystemDriver {
 
 
 
+
+
 	/* Prints the main menu and gets a selection from the user.
 	 	* 1. Create a login user account
 	 	* 2. Login an existing user
@@ -66,7 +68,7 @@ public class JAASSystemDriver {
 	static void menu() throws IOException, NoSuchAlgorithmException {
 
 		try {
-			System.out.print("\033[H\033[2J");
+			clearScreen();
 
     		Scanner scan = new Scanner(System.in);
     		Console console = System.console();
@@ -85,7 +87,7 @@ public class JAASSystemDriver {
 				choice = scan.nextInt();
 				scan.nextLine();
 
-				System.out.print("\033[H\033[2J");
+				clearScreen();
 			}
 			catch(java.util.InputMismatchException e) {
 				choice = 0;
@@ -96,120 +98,17 @@ public class JAASSystemDriver {
 				System.out.println("\n--------------------------\n" + 
 						 			"Create an account\n" +
 						 			"--------------------------\n");
-
-				String name;
-				int id = 0;
-				String username;
-				String password;
-
-
-
-				/* Gets user's first name and id number, 
-					checks to make sure the Employee exists */
-
-				Boolean user_exists = true;
-				Boolean employee_exists = false;
-
-				while(user_exists) {
-
-					System.out.print("First Name: ");
-						name = scan.next();
-						scan.nextLine();
-
-					try {
-						System.out.print("ID: ");
-							id = scan.nextInt();
-							scan.nextLine();
-
-						user_exists = processFile.checkLoginList(loginList, id);
-
-						if(user_exists) {
-							System.out.println("\nEmployee account already exists.\n");
-							// overwrite?
-							menu();
-						}
-
-						employee_exists = processFile.checkEmployeeList(employeeList, id);
-
-						if(!employee_exists) {
-							System.out.println("\nEmployee record does not exist.\n");
-							menu();
-						}
-					} catch (InputMismatchException e) {
-						System.err.println("ERROR: " + e);
-							scan.nextLine();
-					}
-				}
-
-
-				
-				/* Gets a username and password from the user, 
-				 	checks if username is already used,
-				 	and has user double enter password. */
-
-				Boolean username_exists = true;
-				Boolean user_accepted = false;
-
-
-				while(!user_accepted) {
-
-					System.out.print("Username: ");
-						username = scan.next();
-						scan.nextLine();
-
-					username_exists = processFile.checkLoginList(loginList, username);
-
-					if(username_exists) {
-						System.out.println("\nUsername already exists.\n");
-					}
-					else {
-
-						System.out.print("Password: ");
-							char[] pass = console.readPassword();
-							password = new String(pass);
-
-						System.out.print("Re-enter Password: ");
-
-						if((new String(console.readPassword())).equals(password)) {
-							user_accepted = true;
-
-							MD5Hash hasher = new MD5Hash();
-
-							loginList.add(new LoggedUser(id,username,hasher.hash(password)));
-
-							FileWriter login = new FileWriter("files/loginList.txt",true);
-							BufferedWriter bw = new BufferedWriter(login);
-							
-							
-							if(loginList.size() == 1){
-								bw.write((loginList.get(loginList.size()-1)).toString());
-							}
-							else {
-								bw.write("\n" + (loginList.get(loginList.size()-1)).toString());
-							}
-							bw.flush();
-							
-							if(bw != null) {
-								bw.close();
-							}
-						}
-						else {
-							System.out.println("\nPassword did not match.\n");
-						}
-					}
-				}
-
+				createAccount();
 
 				/* Reloads menu, allows user to create another account 
 					or login with an existing one. */
 				menu();
 
-
 			} // end Create a Login account
 			else if(choice == 2) { //Login to an existing account
 				
 				lc.login();
-				System.out.print("\033[H\033[2J"); // clears screen
+				clearScreen();
 
 				// If we reach this point then login has succeeded.
 				System.out.println("\nLogin Successful!");
@@ -247,6 +146,10 @@ public class JAASSystemDriver {
 		}
 	}
 
+
+
+
+
 	/* Prints the user menu, and prompts user for selection.
 	 	* 1. Query Employee Information
 	 	* 2. Change Password
@@ -259,111 +162,26 @@ public class JAASSystemDriver {
 						 "1. Query Personal Information\n" +
 						 "2. Change Password\n" +
 						 "3. Logout\n\n");
+
 			Scanner scan = new Scanner(System.in);
-
-
 		
 			int choice = 0;
 
 			try {
 				choice = scan.nextInt();
 				scan.nextLine();
-				System.out.print("\033[H\033[2J"); // clears screen
+				clearScreen();
 			}
 			catch(java.util.InputMismatchException e) {
 				choice = 0;
 			}
 
+
 			if(choice == 1) {
 				queryMenu(_loggedUser);
 			}
 			else if(choice == 2) {
-				Console console = System.console();
-				MD5Hash hasher = new MD5Hash();
-
-				String username;
-				char[] pass;
-				String oldPassword;
-				String newPassword;
-				String newPassword2;
-
-
-				System.out.print("username: ");
-					username = scan.next();
-					scan.nextLine();
-
-				System.out.print("old password: ");
-					pass = console.readPassword();
-					oldPassword = new String(pass);
-
-				boolean correct_user = processFile.checkLoginList(loginList, username, hasher.hash(oldPassword));
-
-				if(!username.equals(_loggedUser) || !correct_user) {
-					System.out.println("\nInvalid username/password.\n");
-					userMenu(_loggedUser);
-				}
-				else {
-
-					System.out.print("new password: ");
-						pass = console.readPassword();
-						newPassword = new String(pass);
-
-
-					System.out.print("re-enter new password: ");
-						pass = console.readPassword();
-						newPassword2 = new String(pass);
-
-
-
-					if(oldPassword.equals(newPassword)) {
-						System.out.println("\nCannot use old password.\n");
-						userMenu(_loggedUser);
-					}
-					else if(!newPassword.equals(newPassword2)) {
-						System.out.println("\nNew Password did not match.\n");
-						userMenu(_loggedUser);
-					}
-					else {
-						List<LoggedUser> tempList = new ArrayList<LoggedUser>();
-
-						for(int i=0; i < loginList.size(); i++) {
-							if(_loggedUser.equals((loginList.get(i)).getUsername())) {
-								tempList.add(new LoggedUser(loginList.get(i).getId(), loginList.get(i).getUsername(), hasher.hash(newPassword)));
-							}
-							else {
-								tempList.add(loginList.get(i));
-							}
-						}
-
-						loginList = tempList;
-
-
-						FileWriter login = new FileWriter("files/loginList.txt",false);
-						BufferedWriter bw = new BufferedWriter(login);
-						
-						
-						for(int i=0; i < loginList.size(); i++) {
-							if(i == 0) {
-								bw.write((loginList.get(i)).toString());
-							}
-							else {
-								bw.write("\n" + (loginList.get(i).toString()));
-							}
-						}
-
-						bw.flush();
-						
-						if(bw != null) {
-							bw.close();
-						}
-
-						System.out.print("\033[H\033[2J"); // clears screen
-						System.out.println("\nPassword Change Successful!\n");
-						userMenu(_loggedUser);
-					}
-				}
-
-				
+				changePassword(_loggedUser);
 			}
 			else if(choice == 3) {
 				try {
@@ -382,6 +200,12 @@ public class JAASSystemDriver {
 	}
 
 
+
+
+
+	/*
+	 * Menu for querying personal information or information of the user's employees
+	 */
 	static void queryMenu(String _loggedUser) throws IOException, NoSuchAlgorithmException {
 		System.out.print("\n--------------------------\n" + 
 						 "Query Menu\n" +
@@ -394,37 +218,38 @@ public class JAASSystemDriver {
 						 "5. Back\n\n");
 
 		Scanner scan = new Scanner(System.in);
-
-
 		
 		int choice = 0;
 
 		try {
 			choice = scan.nextInt();
 			scan.nextLine();
-			System.out.print("\033[H\033[2J"); // clears screen
+			clearScreen();
 		}
 		catch(java.util.InputMismatchException e) {
 			choice = 0;
 		}
 
 
-
 		if(choice == 1) {
+
 			Employee employee = loggedEmployee(_loggedUser);
 			
 			System.out.println("\n" + employee.toString());
 			queryMenu(_loggedUser);
+
 		}
 		else if(choice == 2) {
+
 			Employee employee = selectedEmployee(_loggedUser);
-			System.out.print("\033[H\033[2J"); // clears screen
+			clearScreen();
 			
 			System.out.println("\n" + employee.toString());
 			queryMenu(_loggedUser);
 
 		}
 		else if(choice == 3) {
+
 			Employee employee = selectedEmployee(_loggedUser);
 
 			System.out.println("\nCurrent Salary: $" + employee.getSalary());
@@ -434,7 +259,7 @@ public class JAASSystemDriver {
 			try {
 				int newSalary = scan.nextInt();
 				scan.nextLine();
-				System.out.print("\033[H\033[2J"); // clears screen
+				clearScreen();
 
 				employee.setSalary(newSalary);
 
@@ -452,34 +277,21 @@ public class JAASSystemDriver {
 				employeeList = tempList;
 
 
-				FileWriter login = new FileWriter("files/employeeList.txt",false);
-				BufferedWriter bw = new BufferedWriter(login);
-				
-				
-				for(int i=0; i < employeeList.size(); i++) {
-					if(i == 0) {
-						bw.write((employeeList.get(i)).stringWrite());
-					}
-					else {
-						bw.write("\n" + (employeeList.get(i).stringWrite()));
-					}
-				}
+				processFile.writeEmployeeFile(employeeList);
 
-				bw.flush();
-				
-				if(bw != null) {
-					bw.close();
-				}
 
 				System.out.println("\nSalary Change Successful!\n");
 				queryMenu(_loggedUser);
+
 			}
 			catch(java.util.InputMismatchException e) {
 				choice = 0;
 				queryMenu(_loggedUser);
 			}
+
 		}
 		else if(choice == 4) {
+
 			Employee employee = selectedEmployee(_loggedUser);
 
 			System.out.println("\nCurrent Position: " + employee.getPosition());
@@ -488,7 +300,7 @@ public class JAASSystemDriver {
 
 			try {
 				String newPosition = scan.nextLine();
-				System.out.print("\033[H\033[2J"); // clears screen
+				clearScreen();
 
 				employee.setPosition(newPosition);
 
@@ -506,32 +318,18 @@ public class JAASSystemDriver {
 				employeeList = tempList;
 
 
-				FileWriter login = new FileWriter("files/employeeList.txt",false);
-				BufferedWriter bw = new BufferedWriter(login);
-				
-				
-				for(int i=0; i < employeeList.size(); i++) {
-					if(i == 0) {
-						bw.write((employeeList.get(i)).stringWrite());
-					}
-					else {
-						bw.write("\n" + (employeeList.get(i).stringWrite()));
-					}
-				}
+				processFile.writeEmployeeFile(employeeList);
 
-				bw.flush();
 				
-				if(bw != null) {
-					bw.close();
-				}
-
 				System.out.println("\nPosition Change Successful!\n");
 				queryMenu(_loggedUser);
+
 			}
 			catch(java.util.InputMismatchException e) {
 				choice = 0;
 				queryMenu(_loggedUser);
 			}
+
 		}
 		else if(choice == 5) {
 			userMenu(_loggedUser);
@@ -542,6 +340,11 @@ public class JAASSystemDriver {
 		}
 	}
 
+
+
+	/*
+	 * Gets an Employee object of the current user
+	 */
 	static Employee loggedEmployee(String _loggedUser) throws IOException, NoSuchAlgorithmException {
 		Employee employee = null;
 		int userId = -1;
@@ -563,6 +366,11 @@ public class JAASSystemDriver {
 
 	}
 
+
+
+	/*
+	 * Gets an Employee object of the selected Employee by the user
+	 */
 	static Employee selectedEmployee(String _loggedUser) throws IOException, NoSuchAlgorithmException {
 		Scanner scan = new Scanner(System.in);
 		Employee employee = null;
@@ -617,6 +425,219 @@ public class JAASSystemDriver {
 
 
 		return employee;
+	}
+
+
+
+	/*
+	 * Creates a new Login account for an existing Employee
+	 */
+	static void createAccount() throws IOException, NoSuchAlgorithmException  {
+		Scanner scan = new Scanner(System.in);
+    	Console console = System.console();
+
+		String name;
+		int id = 0;
+		String username;
+		String password;
+
+
+		/* Gets user's first name and id number, 
+			checks to make sure the Employee exists */
+
+		Boolean user_exists = true;
+		Boolean employee_exists = false;
+
+		while(user_exists) {
+
+			System.out.print("First Name: ");
+				name = scan.next();
+				scan.nextLine();
+
+			try {
+				System.out.print("ID: ");
+					id = scan.nextInt();
+					scan.nextLine();
+
+				user_exists = processFile.checkLoginList(loginList, id);
+
+				if(user_exists) {
+					System.out.println("\nEmployee account already exists.\n");
+					// overwrite?
+					menu();
+				}
+
+				employee_exists = processFile.checkEmployeeList(employeeList, id);
+
+				if(!employee_exists) {
+					System.out.println("\nEmployee record does not exist.\n");
+					menu();
+				}
+			} catch (InputMismatchException e) {
+				System.err.println("ERROR: " + e);
+					scan.nextLine();
+			}
+		}
+
+
+		
+		/* Gets a username and password from the user, 
+		 	checks if username is already used,
+		 	and has user double enter password. */
+
+		Boolean username_exists = true;
+		Boolean user_accepted = false;
+
+
+		while(!user_accepted) {
+
+			System.out.print("Username: ");
+				username = scan.next();
+				scan.nextLine();
+
+			username_exists = processFile.checkLoginList(loginList, username);
+
+			if(username_exists) {
+				System.out.println("\nUsername already exists.\n");
+			}
+			else {
+
+				System.out.print("Password: ");
+					char[] pass = console.readPassword();
+					password = new String(pass);
+
+				System.out.print("Re-enter Password: ");
+
+				if((new String(console.readPassword())).equals(password)) {
+					user_accepted = true;
+
+					MD5Hash hasher = new MD5Hash();
+
+					loginList.add(new LoggedUser(id,username,hasher.hash(password)));
+
+					FileWriter login = new FileWriter("files/loginList.txt",true);
+					BufferedWriter bw = new BufferedWriter(login);
+					
+					
+					if(loginList.size() == 1){
+						bw.write((loginList.get(loginList.size()-1)).toString());
+					}
+					else {
+						bw.write("\n" + (loginList.get(loginList.size()-1)).toString());
+					}
+					bw.flush();
+					
+					if(bw != null) {
+						bw.close();
+					}
+				}
+				else {
+					System.out.println("\nPassword did not match.\n");
+				}
+			}
+		}
+	}
+
+
+
+	/*
+	 * Changes the password of the current user, with restrictions.
+	 */
+	static void changePassword(String _loggedUser) throws IOException, NoSuchAlgorithmException {
+		Scanner scan = new Scanner(System.in);
+		Console console = System.console();
+		MD5Hash hasher = new MD5Hash();
+
+		String username;
+		char[] pass;
+		String oldPassword;
+		String newPassword;
+		String newPassword2;
+
+
+		System.out.print("username: ");
+			username = scan.next();
+			scan.nextLine();
+
+		System.out.print("old password: ");
+			pass = console.readPassword();
+			oldPassword = new String(pass);
+
+		boolean correct_user = processFile.checkLoginList(loginList, username, hasher.hash(oldPassword));
+
+		if(!username.equals(_loggedUser) || !correct_user) {
+			System.out.println("\nInvalid username/password.\n");
+			userMenu(_loggedUser);
+		}
+		else {
+
+			System.out.print("new password: ");
+				pass = console.readPassword();
+				newPassword = new String(pass);
+
+
+			System.out.print("re-enter new password: ");
+				pass = console.readPassword();
+				newPassword2 = new String(pass);
+
+
+
+			if(oldPassword.equals(newPassword)) {
+				System.out.println("\nCannot use old password.\n");
+				userMenu(_loggedUser);
+			}
+			else if(!newPassword.equals(newPassword2)) {
+				System.out.println("\nNew Password did not match.\n");
+				userMenu(_loggedUser);
+			}
+			else {
+				List<LoggedUser> tempList = new ArrayList<LoggedUser>();
+
+				for(int i=0; i < loginList.size(); i++) {
+					if(_loggedUser.equals((loginList.get(i)).getUsername())) {
+						tempList.add(new LoggedUser(loginList.get(i).getId(), loginList.get(i).getUsername(), hasher.hash(newPassword)));
+					}
+					else {
+						tempList.add(loginList.get(i));
+					}
+				}
+
+				loginList = tempList;
+
+
+				FileWriter login = new FileWriter("files/loginList.txt",false);
+				BufferedWriter bw = new BufferedWriter(login);
+				
+				
+				for(int i=0; i < loginList.size(); i++) {
+					if(i == 0) {
+						bw.write((loginList.get(i)).toString());
+					}
+					else {
+						bw.write("\n" + (loginList.get(i).toString()));
+					}
+				}
+
+				bw.flush();
+				
+				if(bw != null) {
+					bw.close();
+				}
+
+				clearScreen();
+				System.out.println("\nPassword Change Successful!\n");
+				userMenu(_loggedUser);
+			}
+		}
+	}
+
+
+
+	/*
+	 * Clears the terminal screen
+	 */
+	static void clearScreen() {
+		System.out.print("\033[H\033[2J"); // clears screen
 	}
 	
 }
