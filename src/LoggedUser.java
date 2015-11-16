@@ -1,7 +1,5 @@
 package src; 
 
-import java.security.Principal;
-
 public class LoggedUser {
 
 	private int id;

@@ -19,7 +19,7 @@ public class JAASLoginModule implements LoginModule {
 	Boolean successfulLogin = false;
 
 	// Variable that keeps track of the principal.
-	Principal examplePrincipal;
+	Principal userPrincipal;
 	
 	/*
 	 * Subject keeps track of who is currently logged in.
@@ -93,9 +93,9 @@ public class JAASLoginModule implements LoginModule {
 		if (successfulLogin) {
 			
 			// Example Principal object stores the logged in user name.
-				examplePrincipal = new ExamplePrincipal(username);
+				userPrincipal = new UserPrincipal(username);
 				// subject stores the current logged in user.
-				subject.getPrincipals().add(examplePrincipal);
+				subject.getPrincipals().add(userPrincipal);
 				return true; 
 		}
 		
@@ -170,7 +170,7 @@ public class JAASLoginModule implements LoginModule {
 	public boolean logout() throws LoginException {
 		username = null;
 		password = null;		
-		subject.getPrincipals().remove(examplePrincipal);
+		subject.getPrincipals().remove(userPrincipal);
 		return true;
 	}
 

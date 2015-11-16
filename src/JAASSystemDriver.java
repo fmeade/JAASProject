@@ -182,6 +182,7 @@ public class JAASSystemDriver {
 
 				// If we reach this point then login has succeeded.
 				System.out.println("\nLogin Successful!\n");
+				String s = "";
 
 
 				/* 
@@ -192,10 +193,10 @@ public class JAASSystemDriver {
 				Set principals = lc.getSubject().getPrincipals();
 				Iterator i = principals.iterator();
 				while (i.hasNext()) {
-					String s = ((Principal)i.next()).getName();
+					s = ((Principal)i.next()).getName();
 				}
 
-				userMenu();
+				userMenu(s);
 
 			} 
 			else if(choice == 3) {
@@ -216,7 +217,7 @@ public class JAASSystemDriver {
 	}
 
 
-	public static void userMenu() throws IOException, NoSuchAlgorithmException  {
+	public static void userMenu(String _loggedUser) throws IOException, NoSuchAlgorithmException  {
 		System.out.print("\n-----------------------------\n" +
 						 "User Menu\n" +
 						 "-----------------------------\n" +
@@ -241,11 +242,91 @@ public class JAASSystemDriver {
 
 			}
 			else if(choice == 2) {
-				//change password
+				Console console = System.console();
+				MD5Hash hasher = new MD5Hash();
 
-				// re-write file
+				String username;
+				char[] pass;
+				String oldPassword;
+				String newPassword;
+				String newPassword2;
 
-				loginList = processFile.buildLoginList();
+
+				System.out.print("username: ");
+					username = scan.next();
+					scan.nextLine();
+
+				System.out.print("old password: ");
+					pass = console.readPassword();
+					oldPassword = new String(pass);
+
+				boolean correct_user = processFile.checkLoginList(loginList, username, hasher.hash(oldPassword));
+
+				if(!username.equals(_loggedUser) || !correct_user) {
+					System.out.println("Invalid username/password");
+					userMenu(_loggedUser);
+				}
+				else {
+
+					System.out.print("new password: ");
+						pass = console.readPassword();
+						newPassword = new String(pass);
+
+
+					System.out.print("re-enter new password: ");
+						pass = console.readPassword();
+						newPassword2 = new String(pass);
+
+
+
+					if(oldPassword.equals(newPassword)) {
+						System.out.println("\nCannot use old password.\n");
+						userMenu(_loggedUser);
+					}
+					else if(!newPassword.equals(newPassword2)) {
+						System.out.println("\nNew Password did not match.\n");
+						userMenu(_loggedUser);
+					}
+					else {
+						List<LoggedUser> tempList = new ArrayList<LoggedUser>();
+
+						for(int i=0; i < loginList.size(); i++) {
+							if(_loggedUser.equals((loginList.get(i)).getUsername())) {
+								tempList.add(new LoggedUser(loginList.get(i).getId(), loginList.get(i).getUsername(), hasher.hash(newPassword)));
+							}
+							else {
+								tempList.add(loginList.get(i));
+							}
+						}
+
+						loginList = tempList;
+
+
+						FileWriter login = new FileWriter("files/loginList.txt",false);
+						BufferedWriter bw = new BufferedWriter(login);
+						
+						
+						for(int i=0; i < loginList.size(); i++) {
+							if(i == 0) {
+								bw.write((loginList.get(i)).toString());
+							}
+							else {
+								bw.write("\n" + (loginList.get(i).toString()));
+							}
+						}
+
+						bw.flush();
+						
+						if(bw != null) {
+							bw.close();
+						}
+
+						System.out.println("\nPassword Change Successful!\n");
+						userMenu(_loggedUser);
+					}
+				}
+
+				
 			}
 			else if(choice == 3) {
 				try {
@@ -254,12 +335,12 @@ public class JAASSystemDriver {
 				}
 				catch (LoginException e) {
 					System.out.println("\nLogout Failed \n");
-					userMenu();
+					userMenu(_loggedUser);
 				}
 			}
 			else {
 				System.err.println("ERROR: Invalid Input.");
-				userMenu();
+				userMenu(_loggedUser);
 			}
 		
 	}
