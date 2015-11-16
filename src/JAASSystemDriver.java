@@ -484,16 +484,17 @@ public class JAASSystemDriver {
 				user_exists = processFile.checkLoginList(loginList, id);
 
 				if(user_exists) {
+					clearScreen();
 					System.out.println("\nEmployee account already exists.\n");
 					// overwrite?
-					menu();
+					//menu();
 				}
 
 				employee_exists = processFile.checkEmployeeList(employeeList, name, id);
 
 				if(!employee_exists) {
+					clearScreen();
 					System.out.println("\nEmployee record does not exist.\n");
-					menu();
 				}
 			} catch (InputMismatchException e) {
 				System.err.println("ERROR: " + e);
@@ -511,7 +512,7 @@ public class JAASSystemDriver {
 		Boolean user_accepted = false;
 
 
-		while(!user_accepted) {
+		while(!user_accepted && employee_exists) {
 
 			System.out.print("Username: ");
 				username = scan.next();
@@ -552,6 +553,8 @@ public class JAASSystemDriver {
 					if(bw != null) {
 						bw.close();
 					}
+					clearScreen();
+					System.out.println("\nUser created successfully!\n");
 				}
 				else {
 					System.out.println("\nPassword did not match.\n");
