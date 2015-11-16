@@ -2,38 +2,27 @@ package src;
 
 import java.io.*;
 import java.util.*;
-
 import java.security.*;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.*;
 
-import src.RootAction; 
-
-
-/* 
- * This class demonstrates 
- *        how to create a logincontext;
- *        how to invoke the login method; 
- *        how to store and extract the logged in subject.
- * This class is also the driver program. 
- * This class uses: 
- *       class LoginModuleExample: implements login method 
- *                                 to perform authentication, 
- *                                 creates a Subject object, and
- *                                 implements the logout method.                     
+/**
+ * The JAASSystemDriver class contains the main method as well as 
+ 	* helper functions for running specific menus.
  */
-
 public class JAASSystemDriver {
 	
 		
     static LoginContext lc; 	
-    static JAASSystem system;
 
     static ProcessFile processFile;
     static List<Employee> employeeList;
     static List<LoggedUser> loginList;
-	
+
+	/*
+	 * The main method instantiates the gobal variables, and calls the initial menu
+	 */
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 
 		/* Create a call back handler. This call back handler will be populated with
@@ -42,19 +31,19 @@ public class JAASSystemDriver {
                  * with NameCallback (to get username) and PasswordCallback (which gets password).
 		 */
 		JAASCallbackHandler cbe = new JAASCallbackHandler(); 
-		system = new JAASSystem();
 
+		/* Object to handle reading and writing from a file into a list */
 		processFile = new ProcessFile();
 
-		employeeList = new ArrayList<Employee>();
+		/* An ArrayList for the Employee file */
 		employeeList = processFile.buildEmployeeList();
 
-		loginList = new ArrayList<LoggedUser>();
+		/* AN ArrayList for the Login file */
 		loginList = processFile.buildLoginList();
 		
 		/* Create a new login context. 
 		 * @param Policy Name : We defined a policy in the file JAASPolicy.txt 
-		 *                      and it is called "JAASExample"
+		 *                      and it is called "JAASMaster"
 		 * @param Call Back Handler
 		 */
 		try {
@@ -67,6 +56,13 @@ public class JAASSystemDriver {
 		menu();
 	}
 
+
+
+	/* Prints the main menu and gets a selection from the user.
+	 	* 1. Create a login user account
+	 	* 2. Login an existing user
+	 	* 3. Exit system
+	 */
 	static void menu() throws IOException, NoSuchAlgorithmException {
 
 		try {
@@ -98,11 +94,14 @@ public class JAASSystemDriver {
 				int id = 0;
 				String username;
 				String password;
+
+
+
+				/* Gets user's first name and id number, 
+					checks to make sure the Employee exists */
+
 				Boolean user_exists = true;
 				Boolean employee_exists = false;
-				Boolean username_exists = true;
-				Boolean user_accepted = false;
-
 
 				while(user_exists) {
 
@@ -134,6 +133,16 @@ public class JAASSystemDriver {
 							scan.nextLine();
 					}
 				}
+
+
+				
+				/* Gets a username and password from the user, 
+				 	checks if username is already used,
+				 	and has user double enter password. */
+
+				Boolean username_exists = true;
+				Boolean user_accepted = false;
+
 
 				while(!user_accepted) {
 
@@ -184,14 +193,18 @@ public class JAASSystemDriver {
 				}
 
 
+				/* Reloads menu, allows user to create another account 
+					or login with an existing one. */
 				menu();
-			}
-			else if(choice == 2) {
+
+
+			} // end Create a Login account
+			else if(choice == 2) { //Login to an existing account
+
 				lc.login();
 
 				// If we reach this point then login has succeeded.
 				System.out.println("\nLogin Successful!\n");
-				String s = "";
 
 
 				/* 
@@ -205,13 +218,14 @@ public class JAASSystemDriver {
 					s = ((Principal)i.next()).getName();
 				}
 
+				/* Accesses the user's menu */
 				userMenu(s);
 
-			} 
-			else if(choice == 3) {
+			} // end login
+			else if(choice == 3) { // exit system
 				System.out.println("\nHave a Nice Day!\n");
 			}
-			else {
+			else { 
 				System.err.println("ERROR: Invalid Input.");
 				menu();
 			}
@@ -225,7 +239,11 @@ public class JAASSystemDriver {
 		}
 	}
 
-
+	/* Prints the user menu, and prompts user for selection.
+	 	* 1. Query Employee Information
+	 	* 2. Change Password
+	 	* 3. Logout
+	 */
 	static void userMenu(String _loggedUser) throws IOException, NoSuchAlgorithmException  {
 		System.out.print("\n-----------------------------\n" +
 						 "User Menu\n" +
