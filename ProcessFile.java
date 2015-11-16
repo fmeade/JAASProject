@@ -165,6 +165,31 @@ public class ProcessFile {
 	}
 
 
+	public void writeLoginFile(List<LoggedUser> _loginList, int _id) throws IOException {
+		FileWriter login = new FileWriter("files/loginList.txt",false);
+		BufferedWriter bw = new BufferedWriter(login);
+		
+		
+		for(int i=0; i < _loginList.size(); i++) {
+			
+			if(_id != _loginList.get(i).getId()) {
+				if(i == 0) {
+					bw.write((_loginList.get(i)).toString());
+				}
+				else {
+					bw.write("\n" + (_loginList.get(i).toString()));
+				}
+			}
+		}
+
+		bw.flush();
+		
+		if(bw != null) {
+			bw.close();
+		}
+	}
+
+
 	public void writeSuccessfulLogger(String _username) throws IOException {
 		SimpleDateFormat utcDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 		utcDateFormat.setTimeZone(TimeZone.getTimeZone("GMT-4"));

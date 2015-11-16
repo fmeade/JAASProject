@@ -1,3 +1,3 @@
 JAASMaster {
-	src.JAASLoginModule required debug=false; 
+	JAASLoginModule required debug=false; 
 };

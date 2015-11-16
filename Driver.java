@@ -92,9 +92,6 @@ public class Driver {
 
 			if(choice == 1) {
 
-				System.out.println("\n--------------------------\n" + 
-						 			"Create an account\n" +
-						 			"--------------------------\n");
 				createAccount();
 
 				/* Reloads menu, allows user to create another account 
@@ -137,7 +134,7 @@ public class Driver {
 		}
 		catch (LoginException e) {
 			clearScreen();
-			System.out.println("\nUsername/password incorrect! \n");
+			System.out.println("\nUsername/password incorrect! \n" + e);
 			menu();
 		}
 		catch (SecurityException e) {
@@ -462,13 +459,20 @@ public class Driver {
 		String password;
 
 
+
 		/* Gets user's first name and id number, 
 			checks to make sure the Employee exists */
 
 		Boolean user_exists = true;
 		Boolean employee_exists = false;
+		Boolean overwrite = true;
 
 		while(user_exists) {
+
+			System.out.println("\n--------------------------\n" + 
+						 	"Create an account\n" +
+						 	"--------------------------\n");
+
 
 			System.out.print("First Name: ");
 				name = scan.next();
@@ -484,8 +488,8 @@ public class Driver {
 				if(user_exists) {
 					clearScreen();
 					System.out.println("\nEmployee account already exists.\n");
-					// overwrite?
-					//menu();
+					overwrite = overwrite(id);
+					user_exists = false;
 				}
 
 				employee_exists = processFile.checkEmployeeList(employeeList, name, id);
@@ -510,7 +514,7 @@ public class Driver {
 		Boolean user_accepted = false;
 
 
-		while(!user_accepted && employee_exists) {
+		while(!user_accepted && employee_exists && overwrite) {
 
 			System.out.print("Username: ");
 				username = scan.next();
@@ -651,6 +655,28 @@ public class Driver {
 				System.out.println("\nPassword Change Successful!\n");
 				userMenu(_loggedUser);
 			}
+		}
+	}
+
+
+	/*
+	 *
+	 */
+	static Boolean overwrite(int _id) throws IOException {
+		Scanner scan = new Scanner(System.in);
+
+		System.out.print("\nWould you like to overwrite the existing account? (yes/no) ");
+			String choice = scan.next();
+			scan.nextLine();
+			clearScreen();
+
+		if(choice.equals("yes")) {
+			processFile.writeLoginFile(loginList, _id);
+			loginList = processFile.buildLoginList();
+			return true;
+		}
+		else {
+			return false;
 		}
 	}
 
