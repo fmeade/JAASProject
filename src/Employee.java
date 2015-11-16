@@ -45,10 +45,22 @@ public class Employee {
 	}
 
 	public String toString() {
-		return "First Name: " + name + "\n" + 
+		String str =  "First Name: " + name + "\n" + 
 				"ID: " + id + "\n" +
 				"Position: " + position + "\n" +
-				"Supervisor: " + supervisor + "\n" +
-				"Salary: " + salary + "\n";
+				"Supervisor: ";
+				 if(supervisor.equals("")) {
+				 	str = str + "\n";
+				 }
+				 else {
+				 	str = str + supervisor.substring(0, supervisor.indexOf(" ")) + "\n";
+				 }
+				str = str + "Salary: $" + salary + "\n";
+
+		return str;
+	}
+
+	public String stringWrite() {
+		return name + ", " + id + ", " + position + ", " + supervisor + ", $" + salary;
 	}
 }

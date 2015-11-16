@@ -340,6 +340,7 @@ public class JAASSystemDriver {
 			else if(choice == 3) {
 				try {
 					lc.logout();
+					_loggedUser = null;
 					menu();
 				}
 				catch (LoginException e) {
@@ -404,7 +405,7 @@ public class JAASSystemDriver {
 				int newSalary = scan.nextInt();
 				scan.nextLine();
 
-				employee.setSalary(salary);
+				employee.setSalary(newSalary);
 
 				List<Employee> tempList = new ArrayList<Employee>();
 
@@ -413,7 +414,7 @@ public class JAASSystemDriver {
 						tempList.add(employee);
 					}
 					else {
-						tempList.add(emmmployeeList.get(i));
+						tempList.add(employeeList.get(i));
 					}
 				}
 
@@ -426,10 +427,10 @@ public class JAASSystemDriver {
 				
 				for(int i=0; i < employeeList.size(); i++) {
 					if(i == 0) {
-						bw.write((employeeList.get(i)).toString());
+						bw.write((employeeList.get(i)).stringWrite());
 					}
 					else {
-						bw.write("\n" + (employeeList.get(i).toString()));
+						bw.write("\n" + (employeeList.get(i).stringWrite()));
 					}
 				}
 
