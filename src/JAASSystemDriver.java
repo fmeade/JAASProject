@@ -398,6 +398,53 @@ public class JAASSystemDriver {
 		else if(choice == 3) {
 			Employee employee = selectedEmployee(_loggedUser);
 
+			System.out.print("\nNew Salary: $");
+
+			try {
+				int newSalary = scan.nextInt();
+				scan.nextLine();
+
+				employee.setSalary(salary);
+
+				List<Employee> tempList = new ArrayList<Employee>();
+
+				for(int i=0; i < employeeList.size(); i++) {
+					if(employee.getId() == employeeList.get(i).getId()) {
+						tempList.add(employee);
+					}
+					else {
+						tempList.add(emmmployeeList.get(i));
+					}
+				}
+
+				employeeList = tempList;
+
+
+				FileWriter login = new FileWriter("files/employeeList.txt",false);
+				BufferedWriter bw = new BufferedWriter(login);
+				
+				
+				for(int i=0; i < employeeList.size(); i++) {
+					if(i == 0) {
+						bw.write((employeeList.get(i)).toString());
+					}
+					else {
+						bw.write("\n" + (employeeList.get(i).toString()));
+					}
+				}
+
+				bw.flush();
+				
+				if(bw != null) {
+					bw.close();
+				}
+
+				System.out.println("\nSalary Change Successful!\n");
+				queryMenu(_loggedUser);
+			}
+			catch(java.util.InputMismatchException e) {
+				choice = 0;
+			}
 
 			queryMenu(_loggedUser);
 		}
