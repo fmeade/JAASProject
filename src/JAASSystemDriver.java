@@ -68,7 +68,6 @@ public class JAASSystemDriver {
 	static void menu() throws IOException, NoSuchAlgorithmException {
 
 		try {
-			clearScreen();
 
     		Scanner scan = new Scanner(System.in);
     		Console console = System.console();
@@ -133,11 +132,13 @@ public class JAASSystemDriver {
 				System.out.println("\nHave a Nice Day!\n");
 			}
 			else { 
+				clearScreen();
 				System.err.println("ERROR: Invalid Input.");
 				menu();
 			}
 		}
 		catch (LoginException e) {
+			clearScreen();
 			System.out.println("\nUsername/password incorrect! \n");
 			menu();
 		}
@@ -252,11 +253,13 @@ public class JAASSystemDriver {
 
 			Employee employee = selectedEmployee(_loggedUser);
 
-			System.out.println("\nCurrent Salary: $" + employee.getSalary());
-
-			System.out.print("\nNew Salary: $");
-
 			try {
+
+				System.out.println("\nCurrent Salary: $" + employee.getSalary());
+
+				System.out.print("\nNew Salary: $");
+
+
 				int newSalary = scan.nextInt();
 				scan.nextLine();
 				clearScreen();
@@ -288,17 +291,22 @@ public class JAASSystemDriver {
 				choice = 0;
 				queryMenu(_loggedUser);
 			}
+			catch(NullPointerException e) {
+				choice = 0;
+			}
 
 		}
 		else if(choice == 4) {
 
 			Employee employee = selectedEmployee(_loggedUser);
 
-			System.out.println("\nCurrent Position: " + employee.getPosition());
-
-			System.out.print("\nNew Position: ");
-
 			try {
+
+				System.out.println("\nCurrent Position: " + employee.getPosition());
+
+				System.out.print("\nNew Position: ");
+
+			
 				String newPosition = scan.nextLine();
 				clearScreen();
 
@@ -328,6 +336,9 @@ public class JAASSystemDriver {
 			catch(java.util.InputMismatchException e) {
 				choice = 0;
 				queryMenu(_loggedUser);
+			}
+			catch(NullPointerException e) {
+				choice = 0;
 			}
 
 		}
@@ -374,6 +385,7 @@ public class JAASSystemDriver {
 	static Employee selectedEmployee(String _loggedUser) throws IOException, NoSuchAlgorithmException {
 		Scanner scan = new Scanner(System.in);
 		Employee employee = null;
+		Employee currentEmployee = null;
 		List<Employee> userEmployeeList = new ArrayList<Employee>();
 		int userId = -1;
 		String userName = null;
@@ -388,12 +400,16 @@ public class JAASSystemDriver {
 		for(int i=0; i < employeeList.size(); i++) {
 			if(userId == employeeList.get(i).getId()) {
 				userName = employeeList.get(i).getName();
+				currentEmployee = employeeList.get(i);
 				i = employeeList.size();
 			}
 		}
 
 		for(int i=0; i < employeeList.size(); i++) {
-			if((userName + " (" + userId + ")").equals(employeeList.get(i).getSupervisor())) {
+			if(currentEmployee.getPosition().equals("CEO") && currentEmployee.getId() != employeeList.get(i).getId()) {
+				userEmployeeList.add(employeeList.get(i));
+			}
+			else if((userName + " (" + userId + ")").equals(employeeList.get(i).getSupervisor())) {
 				userEmployeeList.add(employeeList.get(i));
 			}
 		}
@@ -412,16 +428,21 @@ public class JAASSystemDriver {
 			scan.nextLine();
 
 			for(int i=0; i < userEmployeeList.size(); i++) {
-			if(employeeId == userEmployeeList.get(i).getId()) {
-				employee = userEmployeeList.get(i);
+				if(employeeId == userEmployeeList.get(i).getId()) {
+					employee = userEmployeeList.get(i);
+				}
+			}
+
+
+			if(employee == null) {
+				clearScreen();
+				throw new java.util.InputMismatchException("\nERROR: Invalid Employee ID.\n");
 			}
 		}
-		}
 		catch(java.util.InputMismatchException e) {
-			System.out.println("\nInvalid Employee ID.\n");
+			System.out.println("\nERROR: Invalid Employee ID.\n");
 			queryMenu(_loggedUser);
 		}
-
 
 
 		return employee;

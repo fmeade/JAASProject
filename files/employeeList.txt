@@ -1,8 +1,8 @@
-Pittges, 5175, Chair, Carter (5238), $200000
+Pittges, 5175, Chair, Carter (5238), $250000
 Chase, 5997, Java Professor, Pittges (5175), $180000
 Htay, 5993, Professor, Pittges (5175), $175000
 Lee, 6054, Professor, Pittges (5175), $175000
-Carter, 5238, Dean, , $300000
+Carter, 5238, Dean, Forrest (4286), $300000
 Lewis-Williams, 5358, Associate Professor, Pittges (5175), $150000
 Okie, 5992, Professor, Pittges (5175), $175000
 Phillips, 5379, Professor, Pittges (5175), $175000
@@ -14,3 +14,4 @@ Wang, 5607, Associate Professor, Pittges (5175), $150000
 Rick, 5991, Sys Admin, Pittges (5175), $120000
 Braffit, 5072, Instructor, Pittges (5175), $100000
 Barland, 5977, Professor, Pittges (5175), $150000
+Forrest, 4286, CEO, , $500000
