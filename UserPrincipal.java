@@ -1,5 +1,3 @@
-package src;
-
 import java.security.Principal;
 
 public class UserPrincipal implements Principal {

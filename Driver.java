@@ -1,5 +1,3 @@
-package src;
-
 import java.io.*;
 import java.util.*;
 import java.security.*;
@@ -8,10 +6,10 @@ import javax.security.auth.Subject;
 import javax.security.auth.login.*;
 
 /**
- * The JAASSystemDriver class contains the main method as well as 
+ * The Driver class contains the main method for the JAAS System as well as 
  	* helper functions for running specific menus.
  */
-public class JAASSystemDriver {
+public class Driver {
 	
 		
     static LoginContext lc; 	
@@ -494,7 +492,7 @@ public class JAASSystemDriver {
 
 				if(!employee_exists) {
 					clearScreen();
-					System.out.println("\nEmployee record does not exist.\n");
+					System.out.println("\nNo record exists for this employee.\n");
 				}
 			} catch (InputMismatchException e) {
 				System.err.println("ERROR: " + e);
