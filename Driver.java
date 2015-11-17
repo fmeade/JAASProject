@@ -134,7 +134,7 @@ public class Driver {
 		}
 		catch (LoginException e) {
 			clearScreen();
-			System.out.println("\nUsername/password incorrect! \n" + e);
+			System.out.println("\nUsername/password incorrect! \n");
 			menu();
 		}
 		catch (SecurityException e) {
@@ -483,14 +483,6 @@ public class Driver {
 					id = scan.nextInt();
 					scan.nextLine();
 
-				user_exists = processFile.checkLoginList(loginList, id);
-
-				if(user_exists) {
-					clearScreen();
-					System.out.println("\nEmployee account already exists.\n");
-					overwrite = overwrite(id);
-					user_exists = false;
-				}
 
 				employee_exists = processFile.checkEmployeeList(employeeList, name, id);
 
@@ -498,6 +490,19 @@ public class Driver {
 					clearScreen();
 					System.out.println("\nNo record exists for this employee.\n");
 				}
+				else {
+					user_exists = processFile.checkLoginList(loginList, id);
+
+					if(user_exists) {
+						clearScreen();
+						System.out.println("\nEmployee account already exists.\n");
+						overwrite = overwrite(id);
+						user_exists = false;
+					}
+				}
+
+				
+
 			} catch (InputMismatchException e) {
 				System.err.println("ERROR: " + e);
 					scan.nextLine();

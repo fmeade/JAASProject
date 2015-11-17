@@ -1,4 +1,4 @@
-Pittges, 5175, Chair, Carter (5238), $250000
+Pittges, 5175, Chair & Professor, Carter (5238), $300000
 Chase, 5997, Java Professor, Pittges (5175), $180000
 Htay, 5993, Professor, Pittges (5175), $175000
 Lee, 6054, Professor, Pittges (5175), $175000
